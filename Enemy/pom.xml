@@ -1,0 +1,53 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Define your module's artifactId and version -->
+    <artifactId>Enemy</artifactId>
+    <version>1.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <!-- Define parent if it's part of a multi-module project -->
+    <parent>
+        <groupId>dk.sdu.mmmi.cbse</groupId>
+        <artifactId>asteroids.jpms</artifactId> <!-- Corrected to match the main project's artifactId -->
+        <version>1.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath> <!-- Optional: Ensure this points to the location of the main project's pom.xml -->
+    </parent>
+
+    <dependencies>
+        <!-- Dependency on the Common module -->
+        <dependency>
+            <groupId>dk.sdu.mmmi.cbse</groupId>
+            <artifactId>Common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- Dependency on the CommonBullet module -->
+        <dependency>
+            <groupId>dk.sdu.mmmi.cbse</groupId>
+            <artifactId>CommonBullet</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- Any other dependencies required by the Enemy module -->
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- maven-compiler-plugin: Ensure there's only one declaration -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId> <!-- Always include groupId for clarity -->
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.10.1</version> <!-- Use the specific version you need; match with the main pom.xml if necessary -->
+                <configuration>
+                    <source>10</source> <!-- Set to the Java source compatibility you're targeting -->
+                    <target>10</target> <!-- Set to the Java target compatibility you're targeting -->
+                </configuration>
+            </plugin>
+
+            <!-- Other plugins as needed -->
+        </plugins>
+    </build>
+</project>
