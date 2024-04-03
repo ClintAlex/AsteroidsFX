@@ -4,6 +4,7 @@ import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
+import java.util.Random;
 
 public class EnemyPlugin implements IGamePluginService {
 
@@ -11,7 +12,7 @@ public class EnemyPlugin implements IGamePluginService {
 
     @Override
     public void start(GameData gameData, World world) {
-        enemy = createEnemyShip(gameData);
+        Entity enemy = createEnemyShip(gameData);
         world.addEntity(enemy);
     }
 
@@ -19,10 +20,11 @@ public class EnemyPlugin implements IGamePluginService {
         Enemy enemyShip = new Enemy();
         // Set initial properties like position, shape, etc.
         // For example:
+        Random random = new Random();
         enemyShip.setPolygonCoordinates(14, -2, 9, -2, 9, -4, 7, -4, 7, -6, -3, -6, -3, -8, 1, -8, 1, -10, -11, -10, -11, -6, -9, -6, -9, -4, -7, -4, -7, -2, -11, -2, -11, 2, -7, 2, -7, 4, -9, 4, -9, 6, -11, 6, -11, 10, 1, 10, 1, 8, -3, 8, -3, 6, 3, 6, 3, 2, 5, 2, 5, -2, 3, -2, 3, -4, 5, -4, 5, -2, 7, -2, 7, 2, 5, 2, 5, 4, 3, 4, 3, 6, 7, 6, 7, 4, 9, 4, 9, 2, 14, 2
         ); // Define the shape
-        enemyShip.setX(gameData.getDisplayWidth() / 2);
-        enemyShip.setY(gameData.getDisplayHeight() / 2);
+        enemyShip.setX(random.nextInt(1000)+10);
+        enemyShip.setY(random.nextInt(1000)+10);
         enemyShip.setRotation(0); // Initial rotation facing up
         enemyShip.setRadius(10); // Example radius
         return enemyShip;
