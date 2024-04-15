@@ -27,6 +27,7 @@ public class Main extends Application {
     private final World world = new World();
     private final Map<Entity, Polygon> polygons = new ConcurrentHashMap<>();
     private final Pane gameWindow = new Pane();
+    private long startTime = System.nanoTime();
 
     public static void main(String[] args) {
         launch(Main.class);
@@ -86,11 +87,23 @@ public class Main extends Application {
 
     private void render() {
         new AnimationTimer() {
+            private long lastTime = System.nanoTime();
+
             @Override
             public void handle(long now) {
-                update();
-                draw();
-                gameData.getKeys().update();
+                // Delta time for physics in Entities
+                float delta = (float) ((now - lastTime) / 1e9);
+                lastTime = now;
+                gameData.setDelta(delta);
+
+                // Animation timer
+                double elapsedTime = (now - startTime) / 1_000_000_000.0;
+                gameData.setElapsedTime(elapsedTime);
+                //System.out.println(elapsedTime);
+
+                update(); // Updates the Entities for the world
+                draw(); // Draws the Polygons
+                gameData.getKeys().update(); // Updates the keys used by the player
             }
 
         }.start();
