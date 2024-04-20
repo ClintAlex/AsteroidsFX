@@ -29,19 +29,39 @@ public class AsteroidPlugin implements IGamePluginService
     public Entity createAsteroid(GameData gameData) {
         Entity asteroid = new Asteroid();
         Random random = new Random();
-        int size = random.nextInt(10)+5;
+        int size = random.nextInt(25)+5;
         asteroid.setPolygonCoordinates(size, -size, -size, -size, -size, size, size, size);
-        asteroid.setX(0);
-        asteroid.setY(0);
         asteroid.setRadius(size);
-        asteroid.setRotation(random.nextInt(90));
+        int corner = random.nextInt(4) + 1;
+        switch(corner) {
+            case 1: // øverst til venstre
+                asteroid.setX(random.nextInt(gameData.getDisplayWidth() / 4));
+                asteroid.setY(random.nextInt(gameData.getDisplayHeight() / 4));
+                asteroid.setRotation(random.nextInt(90) + 45);
+                break;
+            case 2: // øverst til højre
+                asteroid.setX(random.nextInt(gameData.getDisplayWidth() / 4) + gameData.getDisplayWidth() * 3 / 4);
+                asteroid.setY(random.nextInt(gameData.getDisplayHeight() / 4));
+                asteroid.setRotation(random.nextInt(90) + 135);
+                break;
+            case 3: // nedre højre hjørne
+                asteroid.setX(random.nextInt(gameData.getDisplayWidth() / 4) + gameData.getDisplayWidth() * 3 / 4);
+                asteroid.setY(random.nextInt(gameData.getDisplayHeight() / 4) + gameData.getDisplayHeight() * 3 / 4);
+                asteroid.setRotation(random.nextInt(90) + 225);
+                break;
+            case 4: // ned venstre hjørne
+                asteroid.setX(random.nextInt(gameData.getDisplayWidth() / 4));
+                asteroid.setY(random.nextInt(gameData.getDisplayHeight() / 4) + gameData.getDisplayHeight() * 3 / 4);
+                asteroid.setRotation(random.nextInt(90) + 315);
+                break;
+        }
         return asteroid;
     }
     public void startAsteroids(GameData gameData, World world) {
         scheduler.scheduleAtFixedRate(() -> {
             Entity asteroid = createAsteroid(gameData);
             world.addEntity(asteroid);
-        }, 0, 6, TimeUnit.SECONDS);
+        }, 0, 3, TimeUnit.SECONDS);
     }
 
     public void stopScheduler() {

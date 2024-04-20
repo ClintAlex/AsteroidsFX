@@ -7,7 +7,7 @@ import dk.sdu.mmmi.cbse.common.data.World;
 public class AsteroidSplitterImpl implements IAsteroidSplitter {
 
     @Override
-    public void createSplitAsteroid(Entity e, World world) {
-    }
+    public void createSplitAsteroid(Entity e, World w) {
 
+    }
 }
