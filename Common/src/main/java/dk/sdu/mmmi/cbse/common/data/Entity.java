@@ -2,6 +2,7 @@ package dk.sdu.mmmi.cbse.common.data;
 
 import java.io.Serializable;
 import java.util.UUID;
+import javafx.scene.paint.Color;
 
 public class Entity implements Serializable {
 
@@ -73,5 +74,15 @@ public class Entity implements Serializable {
 
     public void decrementLives() {
         this.lives--;
+    }
+
+    private Color color;
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 }
