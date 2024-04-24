@@ -4,22 +4,21 @@ import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
 
 /**
- * The IEntityProcessingService interface defines a contract for entity processing services,
- * which are responsible for handling game logic related to entity interactions and behaviors
- * during each game update cycle.
+ * IEntityProcessingService interfacet definerer en kontrakt for tjenester til behandling af enheder,
+ * som er ansvarlige for at håndtere spillogik relateret til enheders interaktioner og adfærd
+ * under hver spilopdateringscyklus.
  */
 public interface IEntityProcessingService {
 
     /**
-     * Processes game logic related to entities.
+     * Behandler spillogik relateret til enheder.
      *
-     * Implementations of this method should contain logic that updates the state of entities
-     * based on game rules, interactions between entities, or other criteria defined by the game.
+     * Implementeringer af denne metode bør indeholde logik, der opdaterer enhedernes tilstand
+     * baseret på spillets regler, interaktioner mellem enheder, eller andre kriterier defineret af spillet.
      *
-     * @param gameData contains data related to the current state of the game,
-     *                 such as game settings and controls.
-     * @param world contains the current state of the game world, including entities and their properties.
+     * @param gameData indeholder data relateret til spillets nuværende tilstand,
+     *                 såsom spilindstillinger og kontroller.
+     * @param world indeholder den nuværende tilstand af spilverdenen, inklusive enheder og deres egenskaber.
      */
     void process(GameData gameData, World world);
 }
-

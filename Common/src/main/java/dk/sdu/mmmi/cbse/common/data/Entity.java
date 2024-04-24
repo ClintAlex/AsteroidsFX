@@ -60,4 +60,18 @@ public class Entity implements Serializable {
     public float getRadius() {
         return this.radius;
     }
+
+    private int lives;
+
+    public void setLives(int lives) {
+        this.lives = lives;
+    }
+
+    public int getLives() {
+        return this.lives;
+    }
+
+    public void decrementLives() {
+        this.lives--;
+    }
 }

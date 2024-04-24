@@ -38,9 +38,9 @@ public class CollisionDetector implements IPostEntityProcessingService {
                 }
                 // Handle player and enemy bullet collision
                 else if (entity1 instanceof Player && entity2 instanceof Bullet && ((Bullet) entity2).getOwner() instanceof Enemy) {
-                    world.removeEntity(entity1);
+                    handleBulletEntityCollision((Bullet) entity2, entity1, world);
                 } else if (entity1 instanceof Bullet && entity2 instanceof Player && ((Bullet) entity1).getOwner() instanceof Enemy) {
-                    world.removeEntity(entity2);
+                    handleBulletEntityCollision((Bullet) entity1, entity2, world);
                 }
                 // Handle player and enemy ship collision
                 else if (entity1 instanceof Player && entity2 instanceof Enemy) {
@@ -50,9 +50,9 @@ public class CollisionDetector implements IPostEntityProcessingService {
                 }
                 //Handle player bullet and enemy ship collision
                 else if (entity1 instanceof Bullet && ((Bullet) entity1).getOwner() instanceof Player && entity2 instanceof Enemy) {
-                    world.removeEntity(entity2);
+                    handleBulletEntityCollision((Bullet) entity1, entity2, world);
                 } else if (entity1 instanceof Enemy && entity2 instanceof Bullet && ((Bullet) entity2).getOwner() instanceof Player) {
-                    world.removeEntity(entity1);
+                    handleBulletEntityCollision((Bullet) entity2, entity1, world);
                 }
             }
         }
@@ -78,6 +78,16 @@ public class CollisionDetector implements IPostEntityProcessingService {
                 asteroidSplitter.createSplitAsteroid(asteroid, world);
                 world.removeEntity(asteroid);
                 break;
+        }
+    }
+
+    private void handleBulletEntityCollision(Bullet bullet, Entity entity, World world) {
+        entity.decrementLives();
+        System.out.println("Entity hit. Remaining lives: " + entity.getLives());
+        world.removeEntity(bullet);
+        if (entity.getLives() <= 0) {
+            System.out.println(entity.getID()+ " destroyed.");
+            world.removeEntity(entity);
         }
     }
 

@@ -92,7 +92,7 @@ public class EnemyPlugin implements IGamePluginService {
                     }, i, TimeUnit.MILLISECONDS);
                 }
             }
-        }, 2, 6, TimeUnit.SECONDS);
+        }, 2, random.nextInt((5 - 1) + 1) + 1, TimeUnit.SECONDS);
     }
 
     public void startShooting(GameData gameData, World world) {

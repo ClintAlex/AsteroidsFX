@@ -4,22 +4,21 @@ import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
 
 /**
- * The IPostEntityProcessingService interface defines a contract for post-entity processing services,
- * which are responsible for handling game logic that needs to be executed after all IEntityProcessingService
- * logic has been completed.
+ * IPostEntityProcessingService interfacet definerer en kontrakt for tjenester til efterbehandling af enheder,
+ * som er ansvarlige for at håndtere spillogik, der skal udføres efter at al IEntityProcessingService
+ * logik er blevet fuldført.
  */
 public interface IPostEntityProcessingService {
 
     /**
-     * Processes game logic that occurs after all IEntityProcessingService logic has been executed.
+     * Behandler spillogik, der forekommer efter at al IEntityProcessingService logik er udført.
      *
-     * Implementations of this method can include logic for cleanup, resolving state changes,
-     * or any other final adjustments to the game state or entities after the main entity processing has occurred.
+     * Implementeringer af denne metode kan omfatte logik til oprydning, løsning af tilstandsændringer,
+     * eller andre endelige justeringer af spiltilstanden eller enhederne efter den primære enhedsbehandling har fundet sted.
      *
-     * @param gameData contains data related to the current state of the game,
-     *                 such as game settings and controls.
-     * @param world contains the current state of the game world, including entities and their properties.
+     * @param gameData indeholder data relateret til spillets nuværende tilstand,
+     *                 såsom spilindstillinger og kontroller.
+     * @param world indeholder den nuværende tilstand af spilverdenen, inklusive enheder og deres egenskaber.
      */
     void process(GameData gameData, World world);
 }
-

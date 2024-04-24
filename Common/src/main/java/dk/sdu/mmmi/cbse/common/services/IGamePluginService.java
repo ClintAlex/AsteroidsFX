@@ -4,34 +4,33 @@ import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
 
 /**
- * The IGamePluginService interface defines a contract for game plugin services,
- * which are responsible for managing the lifecycle of game components such as entities.
+ * IGamePluginService interfacet definerer en kontrakt for spilplugin-tjenester,
+ * som er ansvarlige for at håndtere livscyklussen for spilkomponenter såsom enheder.
  */
 public interface IGamePluginService {
 
     /**
-     * Initializes and adds game components to the game at the start of the game or
-     * when the game level is loaded.
+     * Initialiserer og tilføjer spilkomponenter til spillet ved spillets start eller
+     * når et spilniveau indlæses.
      *
-     * This method should set up initial game state, entities, and other components
-     * required for the game to function.
+     * Denne metode bør opsætte den indledende spiltilstand, enheder og andre komponenter
+     * der er nødvendige for at spillet kan fungere.
      *
-     * @param gameData contains data related to the current state of the game,
-     *                 such as game settings and controls.
-     * @param world contains the current state of the game world, including entities and their properties.
+     * @param gameData indeholder data relateret til spillets nuværende tilstand,
+     *                 såsom spilindstillinger og kontroller.
+     * @param world indeholder den nuværende tilstand af spilverdenen, inklusive enheder og deres egenskaber.
      */
     void start(GameData gameData, World world);
 
     /**
-     * Cleans up and removes game components from the game when the game or a game level is exited.
+     * Rydder op og fjerner spilkomponenter fra spillet, når spillet eller et spilniveau forlades.
      *
-     * This method should ensure that any resources allocated during start are properly released
-     * and that the game state is left in a consistent state.
+     * Denne metode bør sikre, at ressourcer tildelt under start bliver korrekt frigivet
+     * og at spiltilstanden efterlades i en konsistent tilstand.
      *
-     * @param gameData contains data related to the current state of the game,
-     *                 such as game settings and controls.
-     * @param world contains the current state of the game world, including entities and their properties.
+     * @param gameData indeholder data relateret til spillets nuværende tilstand,
+     *                 såsom spilindstillinger og kontroller.
+     * @param world indeholder den nuværende tilstand af spilverdenen, inklusive enheder og deres egenskaber.
      */
     void stop(GameData gameData, World world);
 }
-
