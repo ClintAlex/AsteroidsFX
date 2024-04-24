@@ -10,17 +10,17 @@ import java.util.Random;
 
 public class AsteroidSplitterImpl implements IAsteroidSplitter {
     @Override
-    public void createSplitAsteroid(Entity e, World w) {
+    public void createSplitAsteroid(Entity e, World world) {
         if (e instanceof Asteroid) {
             Asteroid parentAsteroid = (Asteroid) e;
             switch (parentAsteroid.getSize()) {
                 case LARGE:
-                    w.addEntity(createChildAsteroid(parentAsteroid, Asteroid.AsteroidSize.MEDIUM));
-                    w.addEntity(createChildAsteroid(parentAsteroid, Asteroid.AsteroidSize.MEDIUM));
+                    world.addEntity(createChildAsteroid(parentAsteroid, Asteroid.AsteroidSize.MEDIUM));
+                    world.addEntity(createChildAsteroid(parentAsteroid, Asteroid.AsteroidSize.MEDIUM));
                     break;
                 case MEDIUM:
-                    w.addEntity(createChildAsteroid(parentAsteroid, Asteroid.AsteroidSize.SMALL));
-                    w.addEntity(createChildAsteroid(parentAsteroid, Asteroid.AsteroidSize.SMALL));
+                    world.addEntity(createChildAsteroid(parentAsteroid, Asteroid.AsteroidSize.SMALL));
+                    world.addEntity(createChildAsteroid(parentAsteroid, Asteroid.AsteroidSize.SMALL));
                     break;
             }
         }
@@ -29,14 +29,22 @@ public class AsteroidSplitterImpl implements IAsteroidSplitter {
     private Asteroid createChildAsteroid(Asteroid parent, Asteroid.AsteroidSize newSize) {
         Asteroid child = new Asteroid();
         child.setSize(newSize);
-        child.setX(parent.getX() + (float)Math.random() - 0.5f); // Small positional offset
-        child.setY(parent.getY() + (float)Math.random() - 0.5f);
-        double angle = Math.random() * 2 * Math.PI; // Full circle
-        float speed = 2 + (float)Math.random() * 3; // Speed between 2 and 5
-        child.setX((float)Math.cos(angle) * speed);
-        child.setY((float)Math.sin(angle) * speed);
+        int size = 0;
+        if (newSize == Asteroid.AsteroidSize.SMALL) {
+            size = 10;
+        } else if (newSize == Asteroid.AsteroidSize.MEDIUM) {
+            size = 20;
+        }
+        child.setPolygonCoordinates(size, -size, -size, -size, -size, size, size, size);
+        child.setRadius(size);
+        child.setX(parent.getX() + (float)Math.random() * 10 - 5);
+        child.setY(parent.getY() + (float)Math.random() * 10 - 5);
+        double angle = Math.random() * 360;
+        child.setRotation(angle);
 
+        System.out.println("Created child asteroid at X: " + child.getX() + " Y: " + child.getY() + " with rotation " + child.getRotation());
         return child;
     }
+
 }
 

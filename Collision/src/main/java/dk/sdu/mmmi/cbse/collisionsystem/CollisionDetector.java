@@ -8,11 +8,14 @@ import dk.sdu.mmmi.cbse.common.bullet.Bullet;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
+import dk.sdu.mmmi.cbse.common.enemy.Enemy;
 import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
+import dk.sdu.mmmi.cbse.playersystem.Player;
 
 public class CollisionDetector implements IPostEntityProcessingService {
 
     private IAsteroidSplitter asteroidSplitter = new AsteroidSplitterImpl();
+
 
     @Override
     public void process(GameData gameData, World world) {
@@ -21,18 +24,44 @@ public class CollisionDetector implements IPostEntityProcessingService {
                 if (entity1.getID().equals(entity2.getID()) || !collides(entity1, entity2)) {
                     continue;
                 }
-
                 // Handle bullet and asteroid collision
                 if (entity1 instanceof Bullet && entity2 instanceof Asteroid) {
                     handleBulletAsteroidCollision((Bullet) entity1, (Asteroid) entity2, world);
                 } else if (entity1 instanceof Asteroid && entity2 instanceof Bullet) {
                     handleBulletAsteroidCollision((Bullet) entity2, (Asteroid) entity1, world);
                 }
+                // Handle player and asteroid collision
+                else if (entity1 instanceof Player && entity2 instanceof Asteroid) {
+                    world.removeEntity(entity1);
+                } else if (entity1 instanceof Asteroid && entity2 instanceof Player) {
+                    world.removeEntity(entity2);
+                }
+                // Handle player and enemy bullet collision
+                else if (entity1 instanceof Player && entity2 instanceof Bullet && ((Bullet) entity2).getOwner() instanceof Enemy) {
+                    world.removeEntity(entity1);
+                } else if (entity1 instanceof Bullet && entity2 instanceof Player && ((Bullet) entity1).getOwner() instanceof Enemy) {
+                    world.removeEntity(entity2);
+                }
+                // Handle player and enemy ship collision
+                else if (entity1 instanceof Player && entity2 instanceof Enemy) {
+                    world.removeEntity(entity1);
+                } else if (entity1 instanceof Enemy && entity2 instanceof Player) {
+                    world.removeEntity(entity2);
+                }
+                //Handle player bullet and enemy ship collision
+                else if (entity1 instanceof Bullet && ((Bullet) entity1).getOwner() instanceof Player && entity2 instanceof Enemy) {
+                    world.removeEntity(entity2);
+                } else if (entity1 instanceof Enemy && entity2 instanceof Bullet && ((Bullet) entity2).getOwner() instanceof Player) {
+                    world.removeEntity(entity1);
+                }
             }
         }
     }
 
     private void handleBulletAsteroidCollision(Bullet bullet, Asteroid asteroid, World world) {
+        if (bullet.getOwner() instanceof Enemy) {
+            return;
+        }
         world.removeEntity(bullet);
         switch (asteroid.getSize()) {
             case SMALL:
