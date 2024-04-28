@@ -1,0 +1,1 @@
+cmd.exe /X /C ""C:\Program Files\Java\jdk-19\bin\javac.exe" @E:/JavaProgram/Git/AsteroidsFX-/Enemy/target/org.codehaus.plexus.compiler.javac.JavacCompiler14185887299640567293arguments"
