@@ -1,6 +1,5 @@
-package dk.sdu.mmmi.cbse.asteroid;
+package dk.sdu.mmmi.cbse.asteroidplugin;
 
-import dk.sdu.mmmi.cbse.common.asteroids.Asteroid;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
@@ -11,9 +10,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class AsteroidPlugin implements IGamePluginService {
-    // Assume the existence of the enum within the Asteroid class
-    // private enum AsteroidSize { SMALL, MEDIUM, LARGE } // Not needed if it's in the Asteroid class
+public class Asteroid implements IGamePluginService {
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     @Override
     public void start(GameData gameData, World world) {
@@ -22,27 +19,27 @@ public class AsteroidPlugin implements IGamePluginService {
 
     @Override
     public void stop(GameData gameData, World world) {
-        for (Entity asteroid : world.getEntities(Asteroid.class)) {
+        for (Entity asteroid : world.getEntities(dk.sdu.mmmi.cbse.common.asteroids.Asteroid.class)) {
             world.removeEntity(asteroid);
         }
         stopScheduler();
     }
 
     private Entity createSmallAsteroid(GameData gameData) {
-        return createAsteroid(gameData, 10, Asteroid.AsteroidSize.SMALL);
+        return createAsteroid(gameData, 10, dk.sdu.mmmi.cbse.common.asteroids.Asteroid.AsteroidSize.SMALL);
     }
 
     private Entity createMediumAsteroid(GameData gameData) {
-        return createAsteroid(gameData, 20, Asteroid.AsteroidSize.MEDIUM);
+        return createAsteroid(gameData, 20, dk.sdu.mmmi.cbse.common.asteroids.Asteroid.AsteroidSize.MEDIUM);
     }
 
     private Entity createLargeAsteroid(GameData gameData) {
-        return createAsteroid(gameData, 30, Asteroid.AsteroidSize.LARGE);
+        return createAsteroid(gameData, 30, dk.sdu.mmmi.cbse.common.asteroids.Asteroid.AsteroidSize.LARGE);
     }
 
-    private Entity createAsteroid(GameData gameData, int size, Asteroid.AsteroidSize asteroidSize) {
-        Asteroid asteroid = new Asteroid();
-        asteroid.setSize(asteroidSize);  // Set the size
+    private Entity createAsteroid(GameData gameData, int size, dk.sdu.mmmi.cbse.common.asteroids.Asteroid.AsteroidSize asteroidSize) {
+        dk.sdu.mmmi.cbse.common.asteroids.Asteroid asteroid = new dk.sdu.mmmi.cbse.common.asteroids.Asteroid();
+        asteroid.setSize(asteroidSize);
         Random random = new Random();
         asteroid.setPolygonCoordinates(size, -size, -size, -size, -size, size, size, size);
         asteroid.setRadius(size);
@@ -51,7 +48,7 @@ public class AsteroidPlugin implements IGamePluginService {
         return asteroid;
     }
 
-    private void setPositionAndRotation(Asteroid asteroid, int corner, GameData gameData) {
+    private void setPositionAndRotation(dk.sdu.mmmi.cbse.common.asteroids.Asteroid asteroid, int corner, GameData gameData) {
         Random random = new Random();
         switch(corner) {
             case 1:
@@ -86,7 +83,7 @@ public class AsteroidPlugin implements IGamePluginService {
 
     public Entity createRandomAsteroid(GameData gameData) {
         Random random = new Random();
-        Asteroid.AsteroidSize size = Asteroid.AsteroidSize.values()[random.nextInt(Asteroid.AsteroidSize.values().length)];
+        dk.sdu.mmmi.cbse.common.asteroids.Asteroid.AsteroidSize size = dk.sdu.mmmi.cbse.common.asteroids.Asteroid.AsteroidSize.values()[random.nextInt(dk.sdu.mmmi.cbse.common.asteroids.Asteroid.AsteroidSize.values().length)];
         switch (size) {
             case SMALL:
                 return createSmallAsteroid(gameData);
@@ -95,7 +92,7 @@ public class AsteroidPlugin implements IGamePluginService {
             case LARGE:
                 return createLargeAsteroid(gameData);
             default:
-                return null; // Ideally should never happen
+                return null;
         }
     }
 

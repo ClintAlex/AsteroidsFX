@@ -7,10 +7,15 @@ import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
 import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
-import java.util.Collection;
-import java.util.Map;
-import java.util.ServiceLoader;
+
+import java.lang.module.Configuration;
+import java.lang.module.ModuleFinder;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+
 import static java.util.stream.Collectors.toList;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -28,6 +33,7 @@ public class Main extends Application {
     private final Map<Entity, Polygon> polygons = new ConcurrentHashMap<>();
     private final Pane gameWindow = new Pane();
     private long startTime = System.nanoTime();
+    private ModuleLayer pluginsLayer;
 
     public static void main(String[] args) {
         launch(Main.class);
@@ -35,6 +41,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage window) throws Exception {
+        initializeModuleLayer();
         Text text = new Text(10, 20, "Destroyed asteroids: 0");
         gameWindow.setPrefSize(gameData.getDisplayWidth(), gameData.getDisplayHeight());
         gameWindow.getChildren().add(text);
@@ -83,6 +90,25 @@ public class Main extends Application {
         window.setScene(scene);
         window.setTitle("ASTEROIDS");
         window.show();
+    }
+
+    private void initializeModuleLayer() {
+        try {
+            Path pluginsDir = Paths.get("E:/JavaProgram/Git/AsteroidsFX-/plugins");
+            ModuleFinder pluginsFinder = ModuleFinder.of(pluginsDir);
+            ModuleLayer parentLayer = ModuleLayer.boot();
+            Configuration configuration = parentLayer.configuration().resolve(
+                    pluginsFinder,
+                    ModuleFinder.of(),
+                    Collections.emptyList()
+            );
+
+            ClassLoader pluginClassLoader = ClassLoader.getSystemClassLoader();
+            this.pluginsLayer = parentLayer.defineModulesWithOneLoader(configuration, pluginClassLoader);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void render() {
@@ -143,7 +169,13 @@ public class Main extends Application {
     }
 
     private Collection<? extends IGamePluginService> getPluginServices() {
-        return ServiceLoader.load(IGamePluginService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
+        if (pluginsLayer == null) {
+            throw new IllegalStateException("Plugins ModuleLayer has not been initialized");
+        }
+        return ServiceLoader.load(pluginsLayer, IGamePluginService.class)
+                .stream()
+                .map(ServiceLoader.Provider::get)
+                .collect(Collectors.toList());
     }
 
     private Collection<? extends IEntityProcessingService> getEntityProcessingServices() {
