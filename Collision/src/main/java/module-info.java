@@ -7,6 +7,7 @@ module Collision {
     requires CommonBullet;
     requires Asteroid;
     requires Player;
+    requires java.net.http;
     exports dk.sdu.mmmi.cbse.collisionsystem;
     provides IPostEntityProcessingService with dk.sdu.mmmi.cbse.collisionsystem.CollisionDetector;
 }

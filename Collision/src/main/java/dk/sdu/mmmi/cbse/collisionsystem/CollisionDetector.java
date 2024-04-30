@@ -1,4 +1,3 @@
-// CollisionDetector.java
 package dk.sdu.mmmi.cbse.collisionsystem;
 
 import dk.sdu.mmmi.cbse.asteroid.AsteroidSplitterImpl;
@@ -11,11 +10,28 @@ import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.enemy.Enemy;
 import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
 import dk.sdu.mmmi.cbse.playersystem.Player;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpClient.Version;
 
 public class CollisionDetector implements IPostEntityProcessingService {
 
     private IAsteroidSplitter asteroidSplitter = new AsteroidSplitterImpl();
+    private final HttpClient client = HttpClient.newBuilder()
+            .version(Version.HTTP_2)
+            .build();
 
+    private void updateGameScore(int scoreToAdd) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/score?points=" + scoreToAdd))
+                .GET()
+                .build();
+
+        client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenAccept(response -> System.out.println("Score service responded: " + response.body()));
+    }
 
     @Override
     public void process(GameData gameData, World world) {
@@ -67,16 +83,19 @@ public class CollisionDetector implements IPostEntityProcessingService {
             case SMALL:
                 System.out.println("Destroying small asteroid.");
                 world.removeEntity(asteroid);
+                updateGameScore(100);
                 break;
             case MEDIUM:
                 System.out.println("Splitting medium asteroid.");
                 asteroidSplitter.createSplitAsteroid(asteroid, world);
                 world.removeEntity(asteroid);
+                updateGameScore(200);
                 break;
             case LARGE:
                 System.out.println("Splitting large asteroid.");
                 asteroidSplitter.createSplitAsteroid(asteroid, world);
                 world.removeEntity(asteroid);
+                updateGameScore(300);
                 break;
         }
     }
@@ -88,6 +107,7 @@ public class CollisionDetector implements IPostEntityProcessingService {
         if (entity.getLives() <= 0) {
             System.out.println(entity.getID()+ " destroyed.");
             world.removeEntity(entity);
+            updateGameScore(1000);
         }
     }
 

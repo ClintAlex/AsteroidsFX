@@ -11,6 +11,14 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import javafx.application.Platform;
 import static java.util.stream.Collectors.toList;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -28,6 +36,9 @@ public class Main extends Application {
     private final Map<Entity, Polygon> polygons = new ConcurrentHashMap<>();
     private final Pane gameWindow = new Pane();
     private long startTime = System.nanoTime();
+    private Text scoreText;
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private final HttpClient httpClient = HttpClient.newHttpClient();
 
     public static void main(String[] args) {
         launch(Main.class);
@@ -35,9 +46,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage window) throws Exception {
-        Text text = new Text(10, 20, "Destroyed asteroids: 0");
+        scoreText = new Text(10, 20, "Destroyed asteroids: 0");
         gameWindow.setPrefSize(gameData.getDisplayWidth(), gameData.getDisplayHeight());
-        gameWindow.getChildren().add(text);
+        gameWindow.getChildren().add(scoreText);
 
         Scene scene = new Scene(gameWindow);
         scene.setOnKeyPressed(event -> {
@@ -83,6 +94,20 @@ public class Main extends Application {
         window.setScene(scene);
         window.setTitle("ASTEROIDS");
         window.show();
+        startScoreUpdater();
+    }
+
+    private void startScoreUpdater() {
+        scheduler.scheduleAtFixedRate(() -> {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("http://localhost:8080/getScore"))
+                    .build();
+            httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                    .thenAccept(response -> {
+                        String score = response.body();
+                        Platform.runLater(() -> scoreText.setText("Destroyed asteroids: " + score));
+                    });
+        }, 0, 500, TimeUnit.MILLISECONDS);
     }
 
     private void render() {
@@ -140,6 +165,11 @@ public class Main extends Application {
             polygon.setFill(entity.getColor());
         }
 
+    }
+
+    @Override
+    public void stop() {
+        scheduler.shutdown();
     }
 
     private Collection<? extends IGamePluginService> getPluginServices() {
