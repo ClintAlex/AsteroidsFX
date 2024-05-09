@@ -12,10 +12,16 @@ import dk.sdu.mmmi.cbse.common.enemy.Enemy;
 import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
 import dk.sdu.mmmi.cbse.playersystem.Player;
 
+import java.util.ServiceLoader;
+
 public class CollisionDetector implements IPostEntityProcessingService {
 
-    private IAsteroidSplitter asteroidSplitter = new AsteroidSplitterImpl();
+    private IAsteroidSplitter asteroidSplitter;
 
+    public CollisionDetector() {
+        ServiceLoader<IAsteroidSplitter> loader = ServiceLoader.load(IAsteroidSplitter.class);
+        asteroidSplitter = loader.findFirst().orElseThrow(() -> new RuntimeException("Ingen IAsteroidSplitter fundet"));
+    }
 
     @Override
     public void process(GameData gameData, World world) {

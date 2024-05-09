@@ -12,8 +12,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class AsteroidPlugin implements IGamePluginService {
-    // Assume the existence of the enum within the Asteroid class
-    // private enum AsteroidSize { SMALL, MEDIUM, LARGE } // Not needed if it's in the Asteroid class
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     @Override
     public void start(GameData gameData, World world) {
@@ -42,7 +40,7 @@ public class AsteroidPlugin implements IGamePluginService {
 
     private Entity createAsteroid(GameData gameData, int size, Asteroid.AsteroidSize asteroidSize) {
         Asteroid asteroid = new Asteroid();
-        asteroid.setSize(asteroidSize);  // Set the size
+        asteroid.setSize(asteroidSize);
         Random random = new Random();
         asteroid.setPolygonCoordinates(size, -size, -size, -size, -size, size, size, size);
         asteroid.setRadius(size);
@@ -95,7 +93,7 @@ public class AsteroidPlugin implements IGamePluginService {
             case LARGE:
                 return createLargeAsteroid(gameData);
             default:
-                return null; // Ideally should never happen
+                return null;
         }
     }
 
@@ -103,6 +101,4 @@ public class AsteroidPlugin implements IGamePluginService {
         scheduler.shutdown();
     }
 
-
 }
-
