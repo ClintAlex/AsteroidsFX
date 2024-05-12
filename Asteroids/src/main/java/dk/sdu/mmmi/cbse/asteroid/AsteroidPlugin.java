@@ -75,14 +75,14 @@ public class AsteroidPlugin implements IGamePluginService {
         }
     }
 
-    public void startAsteroids(GameData gameData, World world) {
+    private void startAsteroids(GameData gameData, World world) {
         scheduler.scheduleAtFixedRate(() -> {
             Entity asteroid = createRandomAsteroid(gameData);
             world.addEntity(asteroid);
         }, 0, 3000, TimeUnit.MILLISECONDS);
     }
 
-    public Entity createRandomAsteroid(GameData gameData) {
+    private Entity createRandomAsteroid(GameData gameData) {
         Random random = new Random();
         Asteroid.AsteroidSize size = Asteroid.AsteroidSize.values()[random.nextInt(Asteroid.AsteroidSize.values().length)];
         switch (size) {
@@ -97,7 +97,7 @@ public class AsteroidPlugin implements IGamePluginService {
         }
     }
 
-    public void stopScheduler() {
+    private void stopScheduler() {
         scheduler.shutdown();
     }
 
