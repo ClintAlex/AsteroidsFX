@@ -1,3 +1,4 @@
+import dk.sdu.mmmi.cbse.common.asteroids.AsteroidSPI;
 import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
 
 module Collision {
@@ -6,9 +7,7 @@ module Collision {
     requires CommonAsteroids;
     requires CommonEnemy;
     requires CommonBullet;
-    requires Asteroid;
     requires Player;
-    exports dk.sdu.mmmi.cbse.collisionsystem;
     provides IPostEntityProcessingService with dk.sdu.mmmi.cbse.collisionsystem.CollisionDetector;
-    uses dk.sdu.mmmi.cbse.common.asteroids.IAsteroidSplitter;
+    uses AsteroidSPI;
 }

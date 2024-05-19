@@ -2,10 +2,7 @@ package dk.sdu.mmmi.cbse.common.bullet;
 
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import javafx.scene.paint.Color;
-/**
- *
- * @author corfixen
- */
+
 public class Bullet extends Entity {
 
         private Entity owner;

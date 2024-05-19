@@ -1,7 +1,7 @@
 package dk.sdu.mmmi.cbse.asteroid;
 
 import dk.sdu.mmmi.cbse.common.asteroids.Asteroid;
-import dk.sdu.mmmi.cbse.common.asteroids.IAsteroidSplitter;
+import dk.sdu.mmmi.cbse.common.asteroids.AsteroidSPI;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
@@ -10,10 +10,10 @@ import java.util.ServiceLoader;
 
 public class AsteroidProcessor implements IEntityProcessingService {
 
-    private IAsteroidSplitter asteroidSplitter;
+    private AsteroidSPI asteroidSplitter;
 
     public AsteroidProcessor() {
-        ServiceLoader<IAsteroidSplitter> loader = ServiceLoader.load(IAsteroidSplitter.class);
+        ServiceLoader<AsteroidSPI> loader = ServiceLoader.load(AsteroidSPI.class);
         asteroidSplitter = loader.findFirst().orElseThrow(() -> new RuntimeException("Ingen IAsteroidSplitter fundet"));
     }
     @Override

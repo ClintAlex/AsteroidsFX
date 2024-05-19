@@ -1,9 +1,7 @@
-// CollisionDetector.java
 package dk.sdu.mmmi.cbse.collisionsystem;
 
-import dk.sdu.mmmi.cbse.asteroid.AsteroidSplitterImpl;
 import dk.sdu.mmmi.cbse.common.asteroids.Asteroid;
-import dk.sdu.mmmi.cbse.common.asteroids.IAsteroidSplitter;
+import dk.sdu.mmmi.cbse.common.asteroids.AsteroidSPI;
 import dk.sdu.mmmi.cbse.common.bullet.Bullet;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
@@ -16,10 +14,10 @@ import java.util.ServiceLoader;
 
 public class CollisionDetector implements IPostEntityProcessingService {
 
-    private IAsteroidSplitter asteroidSplitter;
+    private AsteroidSPI asteroidSplitter;
 
     public CollisionDetector() {
-        ServiceLoader<IAsteroidSplitter> loader = ServiceLoader.load(IAsteroidSplitter.class);
+        ServiceLoader<AsteroidSPI> loader = ServiceLoader.load(AsteroidSPI.class);
         asteroidSplitter = loader.findFirst().orElseThrow(() -> new RuntimeException("Ingen IAsteroidSplitter fundet"));
     }
 
