@@ -10,15 +10,16 @@ import dk.sdu.mmmi.cbse.common.enemy.Enemy;
 import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
 import dk.sdu.mmmi.cbse.playersystem.Player;
 
+import java.util.Optional;
 import java.util.ServiceLoader;
 
 public class CollisionDetector implements IPostEntityProcessingService {
 
-    private AsteroidSPI asteroidSplitter;
+    private Optional<AsteroidSPI> asteroidSplitter;
 
     public CollisionDetector() {
         ServiceLoader<AsteroidSPI> loader = ServiceLoader.load(AsteroidSPI.class);
-        asteroidSplitter = loader.findFirst().orElseThrow(() -> new RuntimeException("Ingen IAsteroidSplitter fundet"));
+        asteroidSplitter = loader.findFirst();
     }
 
     @Override
@@ -67,21 +68,22 @@ public class CollisionDetector implements IPostEntityProcessingService {
             return;
         }
         world.removeEntity(bullet);
-        switch (asteroid.getSize()) {
-            case SMALL:
-                System.out.println("Destroying small asteroid.");
-                world.removeEntity(asteroid);
-                break;
-            case MEDIUM:
-                System.out.println("Splitting medium asteroid.");
-                asteroidSplitter.createSplitAsteroid(asteroid, world);
-                world.removeEntity(asteroid);
-                break;
-            case LARGE:
-                System.out.println("Splitting large asteroid.");
-                asteroidSplitter.createSplitAsteroid(asteroid, world);
-                world.removeEntity(asteroid);
-                break;
+        if (asteroidSplitter.isPresent()) {
+            switch (asteroid.getSize()) {
+                case SMALL:
+                    System.out.println("Destroying small asteroid.");
+                    world.removeEntity(asteroid);
+                    break;
+                case MEDIUM:
+                case LARGE:
+                    System.out.println("Splitting " + asteroid.getSize().name().toLowerCase() + " asteroid.");
+                    asteroidSplitter.get().createSplitAsteroid(asteroid, world);
+                    world.removeEntity(asteroid);
+                    break;
+            }
+        } else {
+            System.out.println("Asteroid splitting not available, removing asteroid.");
+            world.removeEntity(asteroid);
         }
     }
 
